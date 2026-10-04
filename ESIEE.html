@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESIEE Space - Teknofest Fighter UAV 2026</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0a0d14',
+                            card: '#121824',
+                            accent: '#00f0ff',
+                            purple: '#7000ff',
+                            gold: '#ffb700'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'monospace'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0a0d14;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+        }
+        .hud-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+        }
+        .glow-purple {
+            box-shadow: 0 0 25px rgba(112, 0, 255, 0.25);
+        }
+        .hud-border {
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            position: relative;
+        }
+        .hud-border::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px; width: 8px; height: 8px;
+            border-top: 2px solid #00f0ff;
+            border-left: 2px solid #00f0ff;
+        }
+        .hud-border::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; right: -1px; width: 8px; height: 8px;
+            border-bottom: 2px solid #00f0ff;
+            border-right: 2px solid #00f0ff;
+        }
+    </style>
+</head>
+<body class="hud-grid antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-[#0a0d14]/90 backdrop-blur-md border-b border-cyan-500/20">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-rocket text-cyan-400 text-2xl"></i>
+                <span class="font-extrabold text-xl tracking-wider text-white">ESIEE <span class="text-cyan-400">SPACE</span></span>
+                <span class="text-xs bg-cyan-950 text-cyan-400 border border-cyan-500/40 px-2 py-0.5 rounded font-mono">FIGHTER UAV</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-semibold tracking-wide">
+                <a href="#sim" class="hover:text-cyan-400 transition">SIMULATEUR IA</a>
+                <a href="#tech" class="hover:text-cyan-400 transition">ARCHITECTURE</a>
+                <a href="#roadmap" class="hover:text-cyan-400 transition">CALENDRIER</a>
+                <a href="#roles" class="hover:text-cyan-400 transition">RECRUTEMENT</a>
+            </div>
+
+            <a href="https://discord.com/invite/jddysrHxuG" target="_blank" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-extrabold rounded hover:opacity-90 transition glow-cyan flex items-center gap-2">
+                <i class="fa-brands fa-discord text-lg"></i>
+                REJOINDR'L'ÉQUIPE
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-36 pb-20 px-6 max-w-7xl mx-auto min-h-screen flex flex-col justify-center">
+        <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute top-1/3 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -z-10"></div>
+
+        <div class="inline-flex items-center space-x-3 bg-cyan-950/60 border border-cyan-500/30 px-4 py-2 rounded-full w-fit mb-6">
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+            <span class="text-xs font-mono text-cyan-300 tracking-widest uppercase">PROJET ESIEE PARIS 2026 • FINALE EN TURQUIE</span>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+            Concevoir le <span class="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">Drone de Combat</span> Autonome de Demain.
+        </h1>
+
+        <p class="text-lg md:text-xl text-slate-300 max-w-3xl mb-10 leading-relaxed">
+            Nous constituons l'équipe pluridisciplinaire d'ESIEE Paris pour remporter la compétition internationale <strong class="text-white">Teknofest Fighter UAV</strong>. Rejoins l'aventure et développe des compétences avancées en IA embarquée, vision par ordinateur, automatique et aéronautique.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+            <a href="#sim" class="px-8 py-4 bg-cyan-500 text-black font-bold rounded hover:bg-cyan-400 transition flex items-center gap-3 glow-cyan">
+                <i class="fa-solid fa-crosshairs"></i> TESTER LA SIMULATION IA
+            </a>
+            <a href="#roles" class="px-8 py-4 bg-slate-900 border border-cyan-500/40 text-cyan-400 font-bold rounded hover:bg-slate-800 transition flex items-center gap-3">
+                <i class="fa-solid fa-users"></i> VOIR LES POSTES OUVERTS
+            </a>
+        </div>
+
+        <!-- Telemetry Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 pt-8 border-t border-slate-800 font-mono">
+            <div class="bg-slate-900/50 p-4 rounded border border-slate-800">
+                <div class="text-xs text-slate-500">OBJECTIFS MISSION</div>
+                <div class="text-xl font-bold text-cyan-400 mt-1">2 Missions Autonomes</div>
+                <div class="text-xs text-slate-400 mt-1">Fighter & Kamikaze UAV</div>
+            </div>
+            <div class="bg-slate-900/50 p-4 rounded border border-slate-800">
+                <div class="text-xs text-slate-500">CIBLE VISEUR</div>
+                <div class="text-xl font-bold text-purple-400 mt-1">Lock Temps Réel</div>
+                <div class="text-xs text-slate-400 mt-1">Caméra embarquée & IA</div>
+            </div>
+            <div class="bg-slate-900/50 p-4 rounded border border-slate-800">
+                <div class="text-xs text-slate-500">TAILLE ÉQUIPE</div>
+                <div class="text-xl font-bold text-cyan-400 mt-1">3 à 15 Membres</div>
+                <div class="text-xs text-slate-400 mt-1">Formation interne garantie</div>
+            </div>
+            <div class="bg-slate-900/50 p-4 rounded border border-slate-800">
+                <div class="text-xs text-slate-500">DOTATION GAGNANTE</div>
+                <div class="text-xl font-bold text-yellow-400 mt-1">600 000 ₺</div>
+                <div class="text-xs text-slate-400 mt-1">Récompense 1ère Place</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive AI & Flight Simulator -->
+    <section id="sim" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="mb-10">
+            <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ DEMO INTERACTIVE ]</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-2">Démonstrateur Vision par Ordinateur & Poursuite</h2>
+            <p class="text-slate-400 mt-2">Testez le comportement de nos modèles de détection (YOLO) et du filtre de lissage de trajectoire embarqué dans le drone.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-slate-950 rounded-xl p-4 hud-border relative overflow-hidden">
+                <div class="flex justify-between items-center mb-3 font-mono text-xs text-cyan-400 border-b border-cyan-500/20 pb-2">
+                    <span><i class="fa-solid fa-video text-red-500 animate-pulse mr-2"></i>FLUX CAMÉRA EMBARQUÉE 1080P</span>
+                    <span id="fpsCounter">FPS: 60 | LATENCE: 12ms</span>
+                </div>
+                
+                <canvas id="simCanvas" width="700" height="420" class="w-full h-auto bg-slate-900 rounded cursor-crosshair"></canvas>
+
+                <div class="mt-4 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-slate-400">
+                    <div>Cliquez sur la zone pour déplacer la cible manuellement</div>
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="toggleKalman" checked class="accent-cyan-400">
+                            Filtre de Kalman
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="toggleBounding" checked class="accent-cyan-400">
+                            Bounding Box YOLO
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Telemetry Sidebar -->
+            <div class="bg-brand-card rounded-xl p-6 border border-slate-800 flex flex-col justify-between font-mono">
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-800 pb-2 flex items-center justify-between">
+                        TÉLÉMÉTRIE EN VOL
+                        <span class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded">LOCK ACTIVE</span>
+                    </h3>
+
+                    <div class="space-y-4 text-sm">
+                        <div>
+                            <div class="text-xs text-slate-500">INDICE DE CONFIANCE IA</div>
+                            <div class="flex items-center gap-3 mt-1">
+                                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div id="confidenceBar" class="bg-cyan-400 h-full w-[94%] transition-all"></div>
+                                </div>
+                                <span id="confidenceText" class="text-cyan-400 font-bold">94%</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 pt-2">
+                            <div>
+                                <div class="text-xs text-slate-500">ÉCART X (AZIMUT)</div>
+                                <div id="offsetX" class="text-white font-bold text-base mt-1">+0.04°</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-500">ÉCART Y (SITUATION)</div>
+                                <div id="offsetY" class="text-white font-bold text-base mt-1">-0.02°</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-xs text-slate-500">DURÉE CONTINU DU LOCK</div>
+                            <div id="lockTimer" class="text-cyan-400 font-bold text-xl mt-1">04.82 s</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-800">
+                    <button id="resetTargetBtn" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded font-bold transition text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> REINITIALISER LA TRAJECTOIRE
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Architecture -->
+    <section id="tech" class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800">
+        <div class="mb-12 text-center max-w-3xl mx-auto">
+            <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ ARCHITECTURE DE INGENIERIE ]</span>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white mt-2">Stack Technique & Pôles de Développement</h2>
+            <p class="text-slate-400 mt-4">Un projet complet combinant l'ensemble des disciplines enseignées à l'ESIEE Paris.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Pôle 1: IA & Vision -->
+            <div class="bg-brand-card p-6 rounded-xl border border-cyan-500/20 hover:border-cyan-500/50 transition">
+                <div class="w-12 h-12 bg-cyan-950 text-cyan-400 rounded-lg flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">IA & Vision</h3>
+                <p class="text-slate-400 text-sm mb-4">Traitement d'images haute vitesse embarqué sur processeur graphique.</p>
+                <ul class="text-xs font-mono text-cyan-300 space-y-2">
+                    <li>• Détection YOLOv8 / YOLOv10</li>
+                    <li>• Suivi d'objets OpenCV</li>
+                    <li>• Annotation & Datasets</li>
+                </ul>
+            </div>
+
+            <!-- Pôle 2: Electronique Embarquée -->
+            <div class="bg-brand-card p-6 rounded-xl border border-cyan-500/20 hover:border-cyan-500/50 transition">
+                <div class="w-12 h-12 bg-blue-950 text-blue-400 rounded-lg flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Électronique</h3>
+                <p class="text-slate-400 text-sm mb-4">Intégration du calculateur, des cartes de vol et des capteurs de télémesure.</p>
+                <ul class="text-xs font-mono text-blue-300 space-y-2">
+                    <li>• NVIDIA Jetson Orin Nano</li>
+                    <li>• Autopilote Pixhawk / PX4</li>
+                    <li>• Communication MAVLink</li>
+                </ul>
+            </div>
+
+            <!-- Pôle 3: Automatique & Simulation -->
+            <div class="bg-brand-card p-6 rounded-xl border border-cyan-500/20 hover:border-cyan-500/50 transition">
+                <div class="w-12 h-12 bg-purple-950 text-purple-400 rounded-lg flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-sliders"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Automatique</h3>
+                <p class="text-slate-400 text-sm mb-4">Asservissement de vol et simulation physique en environnement virtuel.</p>
+                <ul class="text-xs font-mono text-purple-300 space-y-2">
+                    <li>• Navigation Autonome ROS2</li>
+                    <li>• Simulation SITL & Gazebo</li>
+                    <li>• Asservissement visuel</li>
+                </ul>
+            </div>
+
+            <!-- Pôle 4: Aéronautique & CAO -->
+            <div class="bg-brand-card p-6 rounded-xl border border-cyan-500/20 hover:border-cyan-500/50 transition">
+                <div class="w-12 h-12 bg-emerald-950 text-emerald-400 rounded-lg flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-plane"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Aéronautique</h3>
+                <p class="text-slate-400 text-sm mb-4">Conception structurelle du drone, étude aérodynamique et matériaux.</p>
+                <ul class="text-xs font-mono text-emerald-300 space-y-2">
+                    <li>• Modelisation SolidWorks CAO</li>
+                    <li>• Usinage & Impression 3D</li>
+                    <li>• Structure Carbone / Composite</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap & Timeline -->
+    <section id="roadmap" class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800">
+        <div class="mb-12">
+            <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ CALENDRIER DE LA COMPÉTITION ]</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-2">Feuille de Route 2026</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 font-mono">
+            <div class="bg-slate-900/60 p-6 rounded-xl border-l-4 border-cyan-400">
+                <div class="text-xs text-slate-500">MARS 2026</div>
+                <div class="text-lg font-bold text-white mt-1">Formulaire Technique</div>
+                <p class="text-xs text-slate-400 mt-2">Dépôt du dossier de qualification et validation de la structure de l'équipe ESIEE Space.</p>
+            </div>
+            <div class="bg-slate-900/60 p-6 rounded-xl border-l-4 border-blue-400">
+                <div class="text-xs text-slate-500">MAI 2026</div>
+                <div class="text-lg font-bold text-white mt-1">Rapport de Conception (CDR)</div>
+                <p class="text-xs text-slate-400 mt-2">Présentation détaillée de l'architecture matérielle, logicielle et des simulations de vol.</p>
+            </div>
+            <div class="bg-slate-900/60 p-6 rounded-xl border-l-4 border-purple-400">
+                <div class="text-xs text-slate-500">JUILLET 2026</div>
+                <div class="text-lg font-bold text-white mt-1">Vidéos de Vol & Lock</div>
+                <p class="text-xs text-slate-400 mt-2">Démonstration en vol autonome réel et enregistrement des performances de détection IA.</p>
+            </div>
+            <div class="bg-slate-900/60 p-6 rounded-xl border-l-4 border-yellow-400">
+                <div class="text-xs text-slate-500">AOUT 2026</div>
+                <div class="text-lg font-bold text-white mt-1">Grande Finale (Turquie)</div>
+                <p class="text-xs text-slate-400 mt-2">Déplacement sur le tarmac de Eskisehir pour affronter les meilleures équipes mondiales.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recruitment Section -->
+    <section id="roles" class="py-20 px-6 max-w-7xl mx-auto border-t border-slate-800">
+        <div class="mb-12">
+            <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">[ RECRUTEMENT ESIEE SPACE ]</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-white mt-2">Pas d'expérience ? Aucun problème.</h2>
+            <p class="text-slate-400 mt-2">Les anciens membres vous accompagnent avec des formations internes axées sur la pratique.</p>
+        </div>
+
+        <div class="bg-gradient-to-r from-cyan-950/40 via-brand-card to-purple-950/40 p-8 rounded-2xl border border-cyan-500/30 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-4">
+                <h3 class="text-2xl font-bold text-white">Prêt à faire voler le premier drone de combat ESIEE Paris ?</h3>
+                <p class="text-slate-300 max-w-xl text-sm leading-relaxed">
+                    Que vous soyez en 1ère, 2e, 3e, 4e ou 5e année, votre enthousiasme est le bienvenu. Nous adaptons l'engagement au rythme de vos cours et révisions.
+                </p>
+                <div class="flex items-center gap-6 font-mono text-xs text-cyan-400">
+                    <span><i class="fa-solid fa-location-dot mr-1"></i> Local ESIEE Space</span>
+                    <span><i class="fa-solid fa-graduation-cap mr-1"></i> Formations Internes</span>
+                    <span><i class="fa-solid fa-users mr-1"></i> Réseau Inter-Promos</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3 w-full md:w-auto">
+                <a href="https://discord.com/invite/jddysrHxuG" target="_blank" class="px-8 py-4 bg-cyan-500 text-black font-extrabold rounded hover:bg-cyan-400 transition text-center glow-cyan flex items-center justify-center gap-3">
+                    <i class="fa-brands fa-discord text-xl"></i>
+                    REJOINDR'LE DISCORD
+                </a>
+                <a href="mailto:club.space@edu.esiee.fr" class="px-8 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded transition text-center text-sm border border-slate-700">
+                    <i class="fa-solid fa-envelope mr-2"></i> club.space@edu.esiee.fr
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 border-t border-slate-900 text-center font-mono text-xs text-slate-600">
+        <p>© 2026 ESIEE SPACE • Projet Teknofest Fighter UAV • ESIEE Paris</p>
+    </footer>
+
+    <!-- Interactive Simulation Script -->
+    <script>
+        const canvas = document.getElementById('simCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let target = { x: 350, y: 210, vx: 2, vy: 1.5, size: 28 };
+        let kalman = { x: 350, y: 210 };
+        let lockTime = 0;
+        let lastTime = performance.now();
+
+        // Control flags
+        const toggleKalman = document.getElementById('toggleKalman');
+        const toggleBounding = document.getElementById('toggleBounding');
+        const confidenceBar = document.getElementById('confidenceBar');
+        const confidenceText = document.getElementById('confidenceText');
+        const offsetX = document.getElementById('offsetX');
+        const offsetY = document.getElementById('offsetY');
+        const lockTimer = document.getElementById('lockTimer');
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            target.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            target.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+            target.vx = (Math.random() - 0.5) * 4;
+            target.vy = (Math.random() - 0.5) * 4;
+        });
+
+        document.getElementById('resetTargetBtn').addEventListener('click', () => {
+            target.x = canvas.width / 2;
+            target.y = canvas.height / 2;
+            target.vx = 2;
+            target.vy = 1.5;
+            lockTime = 0;
+        });
+
+        function animate(now) {
+            const dt = (now - lastTime) / 1000;
+            lastTime = now;
+
+            // Move Target
+            target.x += target.vx;
+            target.y += target.vy;
+
+            // Bounce on edges
+            if (target.x < 40 || target.x > canvas.width - 40) target.vx *= -1;
+            if (target.y < 40 || target.y > canvas.height - 40) target.vy *= -1;
+
+            // Kalman smooth pursuit
+            kalman.x += (target.x - kalman.x) * 0.15;
+            kalman.y += (target.y - kalman.y) * 0.15;
+
+            // Draw Background HUD
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid lines
+            ctx.strokeStyle = 'rgba(0, 240, 255, 0.08)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Crosshair Center
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.beginPath(); ctx.arc(cx, cy, 60, 0, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx - 80, cy); ctx.lineTo(cx + 80, cy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, cy - 80); ctx.lineTo(cx, cy + 80); ctx.stroke();
+
+            // Draw Target Drone
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.arc(target.x, target.y, 6, 0, Math.PI * 2); ctx.fill();
+
+            // Draw Bounding Box (YOLO)
+            if (toggleBounding.checked) {
+                ctx.strokeStyle = '#00f0ff';
+                ctx.lineWidth = 2;
+                const bSize = target.size * 2;
+                ctx.strokeRect(target.x - bSize/2, target.y - bSize/2, bSize, bSize);
+                
+                ctx.fillStyle = '#00f0ff';
+                ctx.font = '10px JetBrains Mono';
+                ctx.fillText(`TARGET_UAV [0.94]`, target.x - bSize/2, target.y - bSize/2 - 5);
+            }
+
+            // Draw Kalman Lock Circle
+            if (toggleKalman.checked) {
+                ctx.strokeStyle = '#a855f7';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath(); ctx.arc(kalman.x, kalman.y, 24, 0, Math.PI * 2); ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Update Telemetry
+            lockTime += dt;
+            const dx = ((target.x - cx) / 10).toFixed(2);
+            const dy = ((target.y - cy) / 10).toFixed(2);
+            
+            offsetX.innerText = (dx >= 0 ? '+' : '') + dx + '°';
+            offsetY.innerText = (dy >= 0 ? '+' : '') + dy + '°';
+            lockTimer.innerText = lockTime.toFixed(2) + ' s';
+
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
